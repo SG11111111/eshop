@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.MsgDao">
+
+    <resultMap type="com.it.entity.Msg" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="memberid" property="memberid" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="savetime" property="savetime" jdbcType="VARCHAR"/>
+        <result column="hfcontent" property="hfcontent" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectAll" parameterType="HashMap" resultMap="BaseResultMap">
+        select * from msg where 1=1
+        <if test="key!='' and key!=null">
+            and memberid in (select id from member where nickname like "%"#{key}"%")
+        </if>
+        order by id desc
+    </select>
+    <insert id="add" parameterType="com.it.entity.Msg">
+        insert into msg values(null,#{memberid},#{content},#{savetime},#{hfcontent})
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from msg where id=#{id}
+    </delete>
+    <select id="findById" parameterType="Integer" resultType="com.it.entity.Msg">
+        select * from msg where id=#{id}
+    </select>
+    <update id="update" parameterType="com.it.entity.Msg">
+        update msg
+        <set>
+            <if test="hfcontent!=null">
+                hfcontent=#{hfcontent}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

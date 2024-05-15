@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.FavDao">
+
+    <resultMap type="com.it.entity.Fav" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="memberid" property="memberid" jdbcType="VARCHAR"/>
+        <result column="productid" property="productid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectAll" parameterType="HashMap" resultMap="BaseResultMap">
+        select * from fav where 1=1
+        <if test="memberid!=null and memberid!=''">
+            and memberid=#{memberid}
+        </if>
+        <if test="productid!=null and productid!=''">
+            and productid=#{productid}
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.it.entity.Fav">
+        insert into fav values(null,#{memberid},#{productid})
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from fav where id=#{id}
+    </delete>
+
+
+
+</mapper>

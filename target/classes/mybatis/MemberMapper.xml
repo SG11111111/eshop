@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.MemberDao">
+
+    <resultMap type="com.it.entity.Member" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="uname" property="uname" jdbcType="VARCHAR"/>
+        <result column="upass" property="upass" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="yue" property="yue" jdbcType="VARCHAR"/>
+        <result column="delstatus" property="delstatus" jdbcType="VARCHAR"/>
+        <result column="filename" property="filename" jdbcType="VARCHAR"/>
+        <result column="lev" property="lev" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectAll" parameterType="HashMap" resultMap="BaseResultMap">
+        select * from member where 1=1 and delstatus=0
+        <if test="uname!=null and uname!=''">
+            and uname=#{uname}
+        </if>
+        <if test="upass!=null and upass!=''">
+            and upass=#{upass}
+        </if>
+        <if test="key!=null and key!=''">
+            and nickname like "%"#{key}"%"
+        </if>
+    </select>
+
+    <select id="findById" parameterType="Integer" resultType="com.it.entity.Member">
+    select * from member where id=#{id}
+ </select>
+
+    <update id="update" parameterType="com.it.entity.Member">
+        update member
+        <set>
+            <if test="upass!=null and upass!=''">
+                upass=#{upass},
+            </if>
+            <if test="nickname!=null and nickname!=''">
+                nickname=#{nickname},
+            </if>
+            <if test="tel!=null and tel!=''">
+                tel=#{tel},
+            </if>
+            <if test="email!=null and email!=''">
+                email=#{email},
+            </if>
+            <if test="delstatus!=null and delstatus!=''">
+                delstatus=#{delstatus},
+            </if>
+            <if test="filename!=null and filename!=''">
+                filename=#{filename},
+            </if>
+            <if test="lev!=null and lev!=''">
+                lev=#{lev},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <insert id="add" parameterType="com.it.entity.Member">
+        insert into member values(null,#{uname},#{upass},#{nickname},#{tel},#{email},#{yue},#{delstatus},#{filename},#{lev})
+    </insert>
+</mapper>

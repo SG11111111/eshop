@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.DingdanDao">
+
+    <resultMap type="com.it.entity.Dingdan" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="ddno" property="ddno" jdbcType="VARCHAR"/>
+        <result column="memberid" property="memberid" jdbcType="VARCHAR"/>
+        <result column="total" property="total" jdbcType="DOUBLE"/>
+        <result column="savetime" property="savetime" jdbcType="VARCHAR"/>
+        <result column="fkfs" property="fkfs" jdbcType="VARCHAR"/>
+        <result column="shrname" property="shrname" jdbcType="VARCHAR"/>
+        <result column="zffs" property="zffs" jdbcType="VARCHAR"/>
+        <result column="shraddr" property="shraddr" jdbcType="VARCHAR"/>
+        <result column="fkstatus" property="fkstatus" jdbcType="VARCHAR"/>
+        <result column="fhstatus" property="fhstatus" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectAll" parameterType="HashMap" resultMap="BaseResultMap">
+        select * from dingdan where 1=1
+        <if test="key!='' and key!=null">
+            and ddno  like "%"#{key}"%"
+        </if>
+        <if test="memberid!='' and memberid!=null">
+            and memberid=#{memberid}
+        </if>
+        order by savetime desc
+    </select>
+
+    <insert id="add" parameterType="com.it.entity.Dingdan">
+        insert into dingdan values (null,#{ddno},#{memberid},#{total},#{savetime},#{fkfs},#{shrname},#{zffs},#{shraddr},#{fkstatus},#{fhstatus})
+    </insert>
+
+    <delete id="delete" parameterType="Int">
+        delete from dingdan where id=#{id}
+    </delete>
+
+    <select id="findById" parameterType="Int" resultType="com.it.entity.Dingdan">
+        select * from dingdan where id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.it.entity.Dingdan">
+        update dingdan
+        <set>
+            <if test="fkstatus!=null and fkstatus!=''">
+                fkstatus=#{fkstatus},
+            </if>
+            <if test="fhstatus!=null and fhstatus!=''">
+                fhstatus=#{fhstatus},
+            </if>
+            <if test="zffs!=null and zffs!=''">
+                zffs=#{zffs},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+    <select id="selectSaleMoney" resultMap="BaseResultMap">
+      select DISTINCT(DATE_FORMAT(savetime,'%Y-%c-%d')) as savetime,SUM(total) as total from dingdan where fhstatus='交易完成'  GROUP BY DATE_FORMAT(savetime,'%Y-%c-%d') order by DATE_FORMAT(savetime,'%Y-%c-%d')
+    </select>
+
+
+
+</mapper>

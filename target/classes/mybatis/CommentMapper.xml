@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.CommentDao">
+
+    <resultMap type="com.it.entity.Comment" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="memberid" property="memberid" jdbcType="VARCHAR"/>
+        <result column="productid" property="productid" jdbcType="VARCHAR"/>
+        <result column="pf" property="pf" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectAll" parameterType="HashMap" resultMap="BaseResultMap">
+        select * from comment where 1=1
+        <if test="memberid!=null and memberid!=''">
+            and memberid=#{memberid}
+        </if>
+        <if test="productid!=null and productid!=''">
+            and productid=#{productid}
+        </if>
+        <if test="status!=null and status!=''">
+            and status=#{status}
+        </if>
+        <if test="key!=null and key!=''">
+            and productid in(select id from product where productname like "%"#{key}"%")
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.it.entity.Comment">
+        insert into comment values(null,#{memberid},#{productid},#{pf},#{content})
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from comment where id=#{id}
+    </delete>
+
+
+</mapper>

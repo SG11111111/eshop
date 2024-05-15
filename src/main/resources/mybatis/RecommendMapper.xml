@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.RecommendDao">
+
+    <select id="getCategoryListByUserid" resultType="java.lang.Integer">
+        select
+    </select>
+    <select id="getFidListByUserid" resultType="java.lang.Integer">
+        select fid from dingdanmsg as a  LEFT JOIN product as b on b.id = a.productid where memberid = #{param1}
+    </select>
+    <select id="getSidListByUserid" resultType="java.lang.Integer">
+        select sid from dingdanmsg as a  LEFT JOIN product as b on b.id = a.productid where memberid = #{param1}
+    </select>
+    <select id="selectAllCategoryList" resultType="com.it.entity.Category">
+        select * from category where delstatus = 0
+    </select>
+    <select id="selectOrderHistory" resultType="java.util.Map">
+        SELECT memberid,productname,fid,sid
+        FROM dingdanmsg t1
+                 left join product t2 on t1.productid = t2.id
+        where memberid = #{param1}
+    </select>
+
+    <select id="selectProductListByOrderNumDesc" resultType="com.it.entity.Product">
+        select *
+        from product
+        where id in (
+            select productid from (
+                                      select productid,count(*) as count
+                                      from dingdanmsg
+                                      GROUP BY productid
+                                      ORDER BY count desc
+                                  ) t
+        );
+    </select>
+
+    <select id="selectProductByFid" resultType="com.it.entity.Product">
+        select * from product where fid = #{param1}
+    </select>
+
+    <select id="selectAllComment" resultType="java.util.Map">
+        select * from comment where productid in <foreach collection="productIds" item="item" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="selectProductByIds" resultType="com.it.entity.Product">
+        select * from product where id in <foreach collection="productIds" item="item" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+</mapper>
